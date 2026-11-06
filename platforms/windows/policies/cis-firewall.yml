@@ -1,0 +1,189 @@
+# CIS Microsoft Windows 11 Enterprise Benchmark, section 9: Windows Defender Firewall with Advanced Security (all Level 1, so included in Level 2).
+# Enforced by ../configuration-profiles/cis-firewall.xml.
+# Queries from Fleet's CIS library (Windows 11 Intune, which reads values delivered by the same Firewall CSP):
+#   https://github.com/fleetdm/fleet/blob/main/docs/solutions/cis/win-11-intune/policies/l1_win11_intune.yml
+# mdm_bridge checks need the host enrolled in Fleet's Windows MDM.
+- name: Windows - CIS - Domain firewall is on
+  query: SELECT 1 FROM registry WHERE path = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\DomainProfile\EnableFirewall' AND data = '1';
+  critical: false
+  description: With the Domain profile firewall off, Windows filters no traffic while connected to a domain network.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Domain Profile > Firewall state = On.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Domain firewall blocks inbound connections by default
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/DomainProfile/DefaultInboundAction</LocURI></Target></Item></Get></SyncBody>' AND mdm_command_output = '1';
+  critical: false
+  description: Inbound connections that don't match an allow rule are blocked, so only explicitly permitted services are reachable.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Domain Profile > Inbound connections = Block.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Domain firewall does not display notifications
+  query: SELECT 1 FROM registry WHERE path = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\Mdm\DomainProfile\DisableNotifications' AND data = '1';
+  critical: false
+  description: Block notifications invite users to approve inbound exceptions they don't understand. CIS turns them off.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Domain Profile > Settings > Display a notification = No.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Domain firewall log file is domainfw.log
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/DomainProfile/LogFilePath</LocURI></Target></Item></Get></SyncBody>' AND mdm_command_output LIKE '%domainfw.log';
+  critical: false
+  description: A separate log file per profile makes firewall events easy to collect and attribute.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Domain Profile > Logging > Name = %SystemRoot%\System32\logfiles\firewall\domainfw.log.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Domain firewall log size limit is 16,384 KB or greater
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/DomainProfile/LogMaxFileSize</LocURI></Target></Item></Get></SyncBody>' AND CAST(mdm_command_output AS INTEGER) >= 16384;
+  critical: false
+  description: The default 1 MB log rolls over too fast to be useful in an investigation.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Domain Profile > Logging > Size limit = 16,384 KB.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Domain firewall logs dropped packets
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/DomainProfile/EnableLogDroppedPackets</LocURI></Target></Item></Get></SyncBody>' AND mdm_command_output = 'true';
+  critical: false
+  description: Dropped-packet logs show what was blocked and when, which is the first thing an investigation asks for.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Domain Profile > Logging > Log dropped packets = Yes.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Domain firewall logs successful connections
+  query: SELECT 1 FROM registry WHERE path = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\Mdm\DomainProfile\Logging\LogSuccessfulConnections' AND data = '1';
+  critical: false
+  description: Successful-connection logs show which inbound connections were allowed and when.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Domain Profile > Logging > Log successful connections = Yes.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Private firewall is on
+  query: SELECT 1 FROM registry WHERE path = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\StandardProfile\EnableFirewall' AND data = '1';
+  critical: false
+  description: With the Private profile firewall off, Windows filters no traffic while connected to a private network.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Private Profile > Firewall state = On.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Private firewall blocks inbound connections by default
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/PrivateProfile/DefaultInboundAction</LocURI></Target></Item></Get></SyncBody>' AND mdm_command_output = '1';
+  critical: false
+  description: Inbound connections that don't match an allow rule are blocked, so only explicitly permitted services are reachable.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Private Profile > Inbound connections = Block.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Private firewall does not display notifications
+  query: SELECT 1 FROM registry WHERE path = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\Mdm\StandardProfile\DisableNotifications' AND data = '1';
+  critical: false
+  description: Block notifications invite users to approve inbound exceptions they don't understand. CIS turns them off.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Private Profile > Settings > Display a notification = No.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Private firewall log file is privatefw.log
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/PrivateProfile/LogFilePath</LocURI></Target></Item></Get></SyncBody>' AND mdm_command_output LIKE '%privatefw.log';
+  critical: false
+  description: A separate log file per profile makes firewall events easy to collect and attribute.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Private Profile > Logging > Name = %SystemRoot%\System32\logfiles\firewall\privatefw.log.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Private firewall log size limit is 16,384 KB or greater
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/PrivateProfile/LogMaxFileSize</LocURI></Target></Item></Get></SyncBody>' AND CAST(mdm_command_output AS INTEGER) >= 16384;
+  critical: false
+  description: The default 1 MB log rolls over too fast to be useful in an investigation.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Private Profile > Logging > Size limit = 16,384 KB.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Private firewall logs dropped packets
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/PrivateProfile/EnableLogDroppedPackets</LocURI></Target></Item></Get></SyncBody>' AND mdm_command_output = 'true';
+  critical: false
+  description: Dropped-packet logs show what was blocked and when, which is the first thing an investigation asks for.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Private Profile > Logging > Log dropped packets = Yes.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Private firewall logs successful connections
+  query: SELECT 1 FROM registry WHERE path = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\Mdm\StandardProfile\Logging\LogSuccessfulConnections' AND data = '1';
+  critical: false
+  description: Successful-connection logs show which inbound connections were allowed and when.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Private Profile > Logging > Log successful connections = Yes.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Public firewall is on
+  query: SELECT 1 FROM registry WHERE path = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\PublicProfile\EnableFirewall' AND data = '1';
+  critical: false
+  description: With the Public profile firewall off, Windows filters no traffic while connected to a public network.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Public Profile > Firewall state = On.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Public firewall blocks inbound connections by default
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/PublicProfile/DefaultInboundAction</LocURI></Target></Item></Get></SyncBody>' AND mdm_command_output = '1';
+  critical: false
+  description: Inbound connections that don't match an allow rule are blocked, so only explicitly permitted services are reachable.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Public Profile > Inbound connections = Block.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Public firewall does not display notifications
+  query: SELECT 1 FROM registry WHERE path = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\Mdm\PublicProfile\DisableNotifications' AND data = '1';
+  critical: false
+  description: Block notifications invite users to approve inbound exceptions they don't understand. CIS turns them off.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Public Profile > Settings > Display a notification = No.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Public firewall ignores local firewall rules
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/PublicProfile/AllowLocalPolicyMerge</LocURI></Target></Item></Get></SyncBody>' AND mdm_command_output = 'false';
+  critical: false
+  description: On public networks, only centrally managed firewall rules apply. Rules created locally by users or apps are ignored.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Public Profile > Settings > Apply local firewall rules = No.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Public firewall ignores local connection security rules
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/PublicProfile/AllowLocalIpsecPolicyMerge</LocURI></Target></Item></Get></SyncBody>' AND mdm_command_output = 'false';
+  critical: false
+  description: On public networks, only centrally managed IPsec connection security rules apply.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Public Profile > Settings > Apply local connection security rules = No.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Public firewall log file is publicfw.log
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/PublicProfile/LogFilePath</LocURI></Target></Item></Get></SyncBody>' AND mdm_command_output LIKE '%publicfw.log';
+  critical: false
+  description: A separate log file per profile makes firewall events easy to collect and attribute.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Public Profile > Logging > Name = %SystemRoot%\System32\logfiles\firewall\publicfw.log.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Public firewall log size limit is 16,384 KB or greater
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/PublicProfile/LogMaxFileSize</LocURI></Target></Item></Get></SyncBody>' AND CAST(mdm_command_output AS INTEGER) >= 16384;
+  critical: false
+  description: The default 1 MB log rolls over too fast to be useful in an investigation.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Public Profile > Logging > Size limit = 16,384 KB.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Public firewall logs dropped packets
+  query: SELECT 1 FROM mdm_bridge WHERE mdm_command_input = '<SyncBody><Get><CmdID>1</CmdID><Item><Target><LocURI>./Device/Vendor/MSFT/Firewall/MdmStore/PublicProfile/EnableLogDroppedPackets</LocURI></Target></Item></Get></SyncBody>' AND mdm_command_output = 'true';
+  critical: false
+  description: Dropped-packet logs show what was blocked and when, which is the first thing an investigation asks for.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Public Profile > Logging > Log dropped packets = Yes.
+  platform: windows
+  webhooks_and_tickets_enabled: false
+- name: Windows - CIS - Public firewall logs successful connections
+  query: SELECT 1 FROM registry WHERE path = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\Mdm\PublicProfile\Logging\LogSuccessfulConnections' AND data = '1';
+  critical: false
+  description: Successful-connection logs show which inbound connections were allowed and when.
+  resolution: |
+    Fleet enforces this with the "cis-firewall" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). Group Policy equivalent: Windows Defender Firewall with Advanced Security > Public Profile > Logging > Log successful connections = Yes.
+  platform: windows
+  webhooks_and_tickets_enabled: false

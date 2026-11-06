@@ -1,0 +1,19 @@
+# CIS Apple macOS 26 Tahoe Benchmark v1.1.0, section 2.2 Firewall.
+# Enforced by ../configuration-profiles/cis-firewall.mobileconfig.
+# Queries from Fleet's CIS library: https://github.com/fleetdm/fleet/blob/main/ee/cis/macos-26/cis-policy-queries.yml
+- name: macOS - CIS 2.2.1 - Firewall is enabled
+  query: SELECT 1 FROM alf WHERE global_state >= 1;
+  critical: false
+  description: The macOS application firewall blocks unwanted incoming connections. With it off, any listening service on this Mac is reachable from the network it is joined to.
+  resolution: |
+    Fleet enforces this with the "CIS - Firewall and stealth mode" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). To turn it on by hand: System Settings > Network > Firewall > On.
+  platform: darwin
+  webhooks_and_tickets_enabled: false
+- name: macOS - CIS 2.2.2 - Firewall stealth mode is enabled
+  query: SELECT 1 FROM alf WHERE stealth_enabled = 1;
+  critical: false
+  description: In stealth mode the Mac drops unsolicited probes, including ICMP ping, so network discovery tools can't find it. This matters most on laptops that join untrusted networks.
+  resolution: |
+    Fleet enforces this with the "CIS - Firewall and stealth mode" configuration profile. Check that the profile shows as Verified on this host (Host details > OS settings). To turn it on by hand: System Settings > Network > Firewall > Options > Enable stealth mode.
+  platform: darwin
+  webhooks_and_tickets_enabled: false
