@@ -1,0 +1,281 @@
+<!--
+  CIS Microsoft Windows 11 Enterprise Benchmark, section 9: Windows Defender Firewall with Advanced Security.
+  Firewall CSP: https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp
+  Logging nodes need Windows 11 22H2 (10.0.22621) or later.
+-->
+<Replace>
+  <!-- 9.1: Domain - Firewall state = On -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/DomainProfile/EnableFirewall</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.1: Domain - Inbound connections = Block -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">int</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/DomainProfile/DefaultInboundAction</LocURI>
+    </Target>
+    <Data>1</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.1: Domain - Display a notification = No -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/DomainProfile/DisableInboundNotifications</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.1: Domain - Log file name = %SystemRoot%\System32\logfiles\firewall\domainfw.log -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">chr</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/DomainProfile/LogFilePath</LocURI>
+    </Target>
+    <Data>%SystemRoot%\System32\logfiles\firewall\domainfw.log</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.1: Domain - Log size limit = 16,384 KB -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">int</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/DomainProfile/LogMaxFileSize</LocURI>
+    </Target>
+    <Data>16384</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.1: Domain - Log dropped packets = Yes -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/DomainProfile/EnableLogDroppedPackets</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.1: Domain - Log successful connections = Yes -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/DomainProfile/EnableLogSuccessConnections</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.2: Private - Firewall state = On -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PrivateProfile/EnableFirewall</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.2: Private - Inbound connections = Block -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">int</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PrivateProfile/DefaultInboundAction</LocURI>
+    </Target>
+    <Data>1</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.2: Private - Display a notification = No -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PrivateProfile/DisableInboundNotifications</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.2: Private - Log file name = %SystemRoot%\System32\logfiles\firewall\privatefw.log -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">chr</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PrivateProfile/LogFilePath</LocURI>
+    </Target>
+    <Data>%SystemRoot%\System32\logfiles\firewall\privatefw.log</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.2: Private - Log size limit = 16,384 KB -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">int</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PrivateProfile/LogMaxFileSize</LocURI>
+    </Target>
+    <Data>16384</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.2: Private - Log dropped packets = Yes -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PrivateProfile/EnableLogDroppedPackets</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.2: Private - Log successful connections = Yes -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PrivateProfile/EnableLogSuccessConnections</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.3: Public - Firewall state = On -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PublicProfile/EnableFirewall</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.3: Public - Inbound connections = Block -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">int</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PublicProfile/DefaultInboundAction</LocURI>
+    </Target>
+    <Data>1</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.3: Public - Display a notification = No -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PublicProfile/DisableInboundNotifications</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.3: Public - Apply local firewall rules = No -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PublicProfile/AllowLocalPolicyMerge</LocURI>
+    </Target>
+    <Data>false</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.3: Public - Apply local connection security rules = No -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PublicProfile/AllowLocalIpsecPolicyMerge</LocURI>
+    </Target>
+    <Data>false</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.3: Public - Log file name = %SystemRoot%\System32\logfiles\firewall\publicfw.log -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">chr</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PublicProfile/LogFilePath</LocURI>
+    </Target>
+    <Data>%SystemRoot%\System32\logfiles\firewall\publicfw.log</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.3: Public - Log size limit = 16,384 KB -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">int</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PublicProfile/LogMaxFileSize</LocURI>
+    </Target>
+    <Data>16384</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.3: Public - Log dropped packets = Yes -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PublicProfile/EnableLogDroppedPackets</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>
+<Replace>
+  <!-- 9.3: Public - Log successful connections = Yes -->
+  <Item>
+    <Meta>
+      <Format xmlns="syncml:metinf">bool</Format>
+    </Meta>
+    <Target>
+      <LocURI>./Vendor/MSFT/Firewall/MdmStore/PublicProfile/EnableLogSuccessConnections</LocURI>
+    </Target>
+    <Data>true</Data>
+  </Item>
+</Replace>

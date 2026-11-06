@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadDescription</key>
+	<string>CIS Apple macOS 26 Tahoe Benchmark v1.1.0: 2.2.1 Ensure Firewall Is Enabled, 2.2.2 Ensure Firewall Stealth Mode Is Enabled. Both keys must be in the same profile.</string>
+	<key>PayloadDisplayName</key>
+	<string>CIS - Firewall and stealth mode</string>
+	<key>PayloadEnabled</key>
+	<true/>
+	<key>PayloadIdentifier</key>
+	<string>com.chicagogitops2026.cis.firewall</string>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>E11EBE4C-EF9B-495B-A761-9C39C41B5445</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadRemovalDisallowed</key>
+	<true/>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadDescription</key>
+			<string>Turns on the application firewall (CIS 2.2.1) and stealth mode (CIS 2.2.2).</string>
+			<key>PayloadDisplayName</key>
+			<string>Firewall</string>
+			<key>PayloadEnabled</key>
+			<true/>
+			<key>PayloadIdentifier</key>
+			<string>com.chicagogitops2026.cis.firewall.2D8A817C-3A52-4E3F-9EC4-0DF5BFDAFA98</string>
+			<key>PayloadType</key>
+			<string>com.apple.security.firewall</string>
+			<key>PayloadUUID</key>
+			<string>2D8A817C-3A52-4E3F-9EC4-0DF5BFDAFA98</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>EnableFirewall</key>
+			<true/>
+			<key>EnableStealthMode</key>
+			<true/>
+		</dict>
+	</array>
+</dict>
+</plist>
