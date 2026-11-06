@@ -33,6 +33,9 @@ org_settings:
     ###########################################################
     server_url: $FLEET_URL
 
+  fleet_desktop:
+    transparency_url: https://pointerpointer.com
+
   ###########################################################
   # Uncomment to use single sign-on (SSO) for admins accessing Fleet.
   #
@@ -108,12 +111,11 @@ controls:
 
   ###########################################################
   # Uncomment when you are ready to start using Fleet's Windows MDM features.
-  # 
+  #
   # Read more:
   #   • https://fleetdm.com/guides/windows-mdm-setup
   ###########################################################
   # windows_enabled_and_configured: true
-
 
 ###########################################################
 # Labels are static or dynamic groupings of computers for
